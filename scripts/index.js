@@ -1,4 +1,5 @@
-import { initialCards } from './cards.js';
+import {initialCards} from './cards.js';
+
 // @todo: Темплейт карточки
 function cardTemplate(link, name) {
     return `
@@ -17,62 +18,53 @@ function cardTemplate(link, name) {
 
 // @todo: DOM узлы
 const placesList = document.querySelector(".places__list");
-const editProfileBtn = document.querySelector(".profile__edit-button");
-const editProfileModal = document.querySelector(".popup_type_edit");
-const popUpClose = document.querySelector(".popup__close");
+const profileEditBtn = document.querySelector(".profile__edit-button");
+const profileEditModal = document.querySelector(".popup_type_edit");
+const modalCloseBtns = document.querySelectorAll(".popup__close");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const nameInput = document.querySelector(".popup__input_type_name");
 const descriptionInput = document.querySelector(".popup__input_type_description");
-const editProfileForm = document.querySelector(".popup_type_edit .popup__form");
+const profileEditForm = document.querySelector(".popup_type_edit .popup__form");
+const cardAddBtn = document.querySelector(".profile__add-button");
+const cardAddModal = document.querySelector(".popup_type_new-card");
+const cardAddForm = document.querySelector(".popup_type_new-card .popup__form");
 
 // @todo: Функция создания карточки
-// function createCard(name, link) {
-//     initialCards.push({
-//         name: name,
-//         link: link,
-//     });
-//     renderCards()
-// }
+function createCard(name, link) {
+
+    initialCards.push({
+        name: name,
+        link: link
+    });
+    renderCards()
+}
 
 // @todo: Функция удаления карточки
 
-// @todo: Вывести карточки на страницу
+// Вывести карточки на страницу
 function renderCards() {
     placesList.innerHTML = initialCards.map(card => cardTemplate(card.link, card.name));
 }
 
-// @todo: Открытие модального окна
-function handleOpenModal() {
-    editProfileModal.classList.add("popup_is-opened");
+// Открытие модального окна
+function handleOpenModal(modal) {
+    modal.classList.add("popup_is-opened");
 }
 
-// @todo: Закрытие модального окна
+// Закрытие модального окна
 function handleCloseModal() {
-    document.querySelector(".popup_is-opened").classList.remove("popup_is-opened");
+    document.querySelectorAll(".popup_is-opened").forEach(modal => modal.classList.remove("popup_is-opened"));
 }
 
-// @todo: Обработчики события
-editProfileBtn.addEventListener("click", () => {
-    nameInput.value = profileTitle.textContent;
-    descriptionInput.value = profileDescription.textContent;
-    handleOpenModal();
-})
-
-popUpClose.addEventListener("click", () => {
-    handleCloseModal();
-})
-
-renderCards();
-
+// сериализация форм
 function serializeForm(formNode) {
     const formData = new FormData(formNode);
-    const data = Object.fromEntries(formData);
-    console.log(data);
-    return data;
+    return Object.fromEntries(formData);
 }
 
-function onSubmitEditForm(e) {
+// сабмит формы редактирования профиля
+function onSubmitEditProfileForm(e) {
     e.preventDefault()
     const { name, description } = serializeForm(e.target)
     profileTitle.textContent = name;
@@ -80,4 +72,33 @@ function onSubmitEditForm(e) {
     handleCloseModal()
 }
 
-editProfileForm.addEventListener("submit", onSubmitEditForm);
+function onSubmitAddCardForm(e) {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const { 'place-name':name, link } = serializeForm(e.target)
+    createCard(name, link);
+    console.log(formData);
+    handleCloseModal()
+}
+
+// @todo: Обработчики событий
+profileEditBtn.addEventListener("click", () => {
+    nameInput.value = profileTitle.textContent;
+    descriptionInput.value = profileDescription.textContent;
+    handleOpenModal(profileEditModal);
+})
+
+cardAddForm.addEventListener("submit", onSubmitAddCardForm);
+
+modalCloseBtns.forEach(closeModal => {
+    closeModal.addEventListener("click", () => {
+        handleCloseModal();
+    });
+});
+
+profileEditForm.addEventListener("submit", onSubmitEditProfileForm);
+
+cardAddBtn.addEventListener("click", () => {handleOpenModal(cardAddModal)})
+
+// Рендер карточек
+renderCards();
