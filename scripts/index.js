@@ -2,18 +2,33 @@ import {initialCards} from './cards.js';
 
 // Темплейт карточки
 function cardTemplate(link, name) {
-    return `
-        <li class="places__item card">
-           <img class="card__image" src="${link}" alt="${name}" />
-           <button type="button" class="card__delete-button"></button>
-           <div class="card__description">
-             <h2 class="card__title">
-               ${name}
-             </h2>
-             <button type="button" class="card__like-button"></button>
-           </div>
-        </li>
-    `
+    const card = document.createElement('li')
+    card.className = 'places__item card'
+
+    const img = document.createElement('img')
+    img.src = link
+    img.alt = name
+    img.classList.add('card__image')
+
+    const deleteButton = document.createElement('button')
+    deleteButton.type = 'button'
+    deleteButton.className = 'card__delete-button'
+
+    const cardDescription = document.createElement('div')
+    cardDescription.className = 'card__description'
+
+    const cardTitle = document.createElement('h2')
+    cardTitle.textContent = name
+    cardTitle.className = 'card__title'
+
+    const likeButton = document.createElement('button')
+    likeButton.type = 'button'
+    likeButton.className = 'card__like-button'
+
+    cardDescription.append(cardTitle ,likeButton)
+    card.append(img, deleteButton, cardDescription)
+
+    return card;
 }
 
 // DOM узлы
@@ -60,7 +75,10 @@ document.querySelectorAll(".popup").forEach(popup => {
 
 // Вывести карточки на страницу
 function renderCards() {
-    placesList.innerHTML = initialCards.map(card => cardTemplate(card.link, card.name));
+    placesList.innerHTML = '';
+    initialCards.forEach(card => {
+        placesList.append(cardTemplate(card.link, card.name));
+    });
     addEvetListeners();
 }
 
