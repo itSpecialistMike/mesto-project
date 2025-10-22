@@ -101,6 +101,7 @@ function onSubmitAddCardForm(e) {
     handleCloseModal()
 }
 
+// Вынес обработчики событий в отдельную функцию
 function addEvetListeners() {
     // Повешал обработчик события на все кнопки лайка
     document.querySelectorAll(".card__like-button").forEach(likeBtn => {
