@@ -29,6 +29,7 @@ const profileEditForm = document.querySelector(".popup_type_edit .popup__form");
 const cardAddBtn = document.querySelector(".profile__add-button");
 const cardAddModal = document.querySelector(".popup_type_new-card");
 const cardAddForm = document.querySelector(".popup_type_new-card .popup__form");
+const imgModal = document.querySelector(".popup_type_image");
 
 // Функция создания карточки
 function createCard(name, link) {
@@ -44,6 +45,7 @@ function createCard(name, link) {
 // Вывести карточки на страницу
 function renderCards() {
     placesList.innerHTML = initialCards.map(card => cardTemplate(card.link, card.name));
+    addEvetListeners();
 }
 
 // Открытие модального окна
@@ -81,44 +83,55 @@ function onSubmitAddCardForm(e) {
     handleCloseModal()
 }
 
-// Событие редактирования профиля
-profileEditBtn.addEventListener("click", () => {
-    nameInput.value = profileTitle.textContent;
-    descriptionInput.value = profileDescription.textContent;
-    handleOpenModal(profileEditModal);
-})
+function addEvetListeners() {
+    // Повешал обработчик события на все кнопки лайка
+    document.querySelectorAll(".card__like-button").forEach(likeBtn => {
+        likeBtn.addEventListener("click", () => {
+            likeBtn.classList.toggle("card__like-button_is-active");
+            console.log(likeBtn);
+        })
+    })
 
-// событие добавления карточки
-cardAddForm.addEventListener("submit", onSubmitAddCardForm);
+    // Повешал обработчик события на все кнопки удаления
+    document.querySelectorAll(".card__delete-button").forEach(deleteBtn => {
+        deleteBtn.addEventListener("click", () => {
+            deleteBtn.closest('.places__item').style.display = "none";
+        })
+    })
 
-// Повешал обработчик события на все кнопки закрытия модалки
-modalCloseBtns.forEach(closeModal => {
-    closeModal.addEventListener("click", () => {
-        handleCloseModal();
+    // Модалка с картинкой
+    document.querySelectorAll(".card__image").forEach(img => {
+        img.addEventListener("click", () => {
+            imgModal.querySelector('.popup__image').src = img.src;
+            imgModal.querySelector(".popup__caption").textContent = img.alt;
+            handleOpenModal(imgModal);
+        })
+    })
+
+    // Событие редактирования профиля
+    profileEditBtn.addEventListener("click", () => {
+        nameInput.value = profileTitle.textContent;
+        descriptionInput.value = profileDescription.textContent;
+        handleOpenModal(profileEditModal);
+    })
+
+    // событие добавления карточки
+    cardAddForm.addEventListener("submit", onSubmitAddCardForm);
+
+    // Повешал обработчик события на все кнопки закрытия модалки
+    modalCloseBtns.forEach(closeModal => {
+        closeModal.addEventListener("click", () => {
+            handleCloseModal();
+        });
     });
-});
 
-// Сабмит изменения профиля
-profileEditForm.addEventListener("submit", onSubmitEditProfileForm);
+    // Сабмит изменения профиля
+    profileEditForm.addEventListener("submit", onSubmitEditProfileForm);
 
-// событие открытия модального окна добавления карточки
-cardAddBtn.addEventListener("click", () => {handleOpenModal(cardAddModal)})
+    // событие открытия модального окна добавления карточки
+    cardAddBtn.addEventListener("click", () => {handleOpenModal(cardAddModal)})
+}
 
 // Рендер карточек
 renderCards();
-
-// Повешал обработчик события на все кнопки лайка
-document.querySelectorAll(".card__like-button").forEach(likeBtn => {
-    likeBtn.addEventListener("click", () => {
-        likeBtn.classList.toggle("card__like-button_is-active");
-        console.log(likeBtn);
-    })
-})
-
-// Повешал обработчик события на все кнопки удаления
-document.querySelectorAll(".card__delete-button").forEach(deleteBtn => {
-    deleteBtn.addEventListener("click", () => {
-        deleteBtn.closest('.places__item').style.display = "none";
-    })
-})
 
