@@ -16,7 +16,7 @@ function cardTemplate(link, name) {
     `
 }
 
-// @todo: DOM узлы
+// DOM узлы
 const placesList = document.querySelector(".places__list");
 const profileEditBtn = document.querySelector(".profile__edit-button");
 const profileEditModal = document.querySelector(".popup_type_edit");
@@ -149,7 +149,7 @@ function addEvetListeners() {
     // Сабмит изменения профиля
     profileEditForm.addEventListener("submit", onSubmitEditProfileForm);
 
-    // событие открытия модального окна добавления карточки
+    // Событие открытия модального окна добавления карточки
     cardAddBtn.addEventListener("click", () => {handleOpenModal(cardAddModal)})
 }
 
