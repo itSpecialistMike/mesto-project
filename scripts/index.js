@@ -37,10 +37,24 @@ function createCard(name, link) {
         name: name,
         link: link
     });
-    renderCards()
+    renderCards(e)
 }
 
-// @todo: Функция удаления карточки
+// Функция закрытия по ESC
+function handleEsc(e) {
+    if (e.key === "Escape") {
+        handleCloseModal();
+    }
+}
+
+document.querySelectorAll(".popup").forEach(popup => {
+    popup.addEventListener("click", e => {
+        if (e.target === popup) {
+            handleCloseModal();
+        }
+    });
+    }
+)
 
 // Вывести карточки на страницу
 function renderCards() {
@@ -51,11 +65,15 @@ function renderCards() {
 // Открытие модального окна
 function handleOpenModal(modal) {
     modal.classList.add("popup_is-opened");
+    document.body.style.overflow = 'hidden';
+    document.addEventListener("keydown", handleEsc);
 }
 
 // Закрытие модального окна
 function handleCloseModal() {
     document.querySelectorAll(".popup_is-opened").forEach(modal => modal.classList.remove("popup_is-opened"));
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', handleEsc);
 }
 
 // Сериализация форм
