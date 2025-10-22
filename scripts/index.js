@@ -2,33 +2,15 @@ import {initialCards} from './cards.js';
 
 // Темплейт карточки
 function cardTemplate(link, name) {
-    const card = document.createElement('li')
-    card.className = 'places__item card'
 
-    const img = document.createElement('img')
-    img.src = link
-    img.alt = name
-    img.classList.add('card__image')
+    const template = document.querySelector('#card-template');
+    const cardElement = template.content.cloneNode(true);
 
-    const deleteButton = document.createElement('button')
-    deleteButton.type = 'button'
-    deleteButton.className = 'card__delete-button'
+    cardElement.querySelector('.card__image').src = link;
+    cardElement.querySelector('.card__image').alt = name;
+    cardElement.querySelector('.card__title').textContent = name;
 
-    const cardDescription = document.createElement('div')
-    cardDescription.className = 'card__description'
-
-    const cardTitle = document.createElement('h2')
-    cardTitle.textContent = name
-    cardTitle.className = 'card__title'
-
-    const likeButton = document.createElement('button')
-    likeButton.type = 'button'
-    likeButton.className = 'card__like-button'
-
-    cardDescription.append(cardTitle ,likeButton)
-    card.append(img, deleteButton, cardDescription)
-
-    return card;
+    return cardElement;
 }
 
 // DOM узлы
@@ -79,7 +61,6 @@ function renderCards() {
     initialCards.forEach(card => {
         placesList.append(cardTemplate(card.link, card.name));
     });
-    addEvetListeners();
 }
 
 // Открытие модального окна
@@ -122,30 +103,13 @@ function onSubmitAddCardForm(e) {
 }
 
 // Вынес обработчики событий в отдельную функцию
-function addEvetListeners() {
-    // Повешал обработчик события на все кнопки лайка
-    document.querySelectorAll(".card__like-button").forEach(likeBtn => {
-        likeBtn.addEventListener("click", () => {
-            likeBtn.classList.toggle("card__like-button_is-active");
-            console.log(likeBtn);
-        })
-    })
-
-    // Повешал обработчик события на все кнопки удаления
-    document.querySelectorAll(".card__delete-button").forEach(deleteBtn => {
-        deleteBtn.addEventListener("click", () => {
-            deleteBtn.closest('.places__item').style.display = "none";
-        })
-    })
-
-    // Модалка с картинкой
-    document.querySelectorAll(".card__image").forEach(img => {
-        img.addEventListener("click", () => {
-            imgModal.querySelector('.popup__image').src = img.src;
-            imgModal.querySelector(".popup__caption").textContent = img.alt;
-            handleOpenModal(imgModal);
-        })
-    })
+function addEventListeners() {
+    // Повешал обработчик события на все кнопки закрытия модалки
+    modalCloseBtns.forEach(closeModal => {
+        closeModal.addEventListener("click", () => {
+            handleCloseModal();
+        });
+    });
 
     // Событие редактирования профиля
     profileEditBtn.addEventListener("click", () => {
@@ -157,20 +121,33 @@ function addEvetListeners() {
     // событие добавления карточки
     cardAddForm.addEventListener("submit", onSubmitAddCardForm);
 
-    // Повешал обработчик события на все кнопки закрытия модалки
-    modalCloseBtns.forEach(closeModal => {
-        closeModal.addEventListener("click", () => {
-            handleCloseModal();
-        });
-    });
-
     // Сабмит изменения профиля
     profileEditForm.addEventListener("submit", onSubmitEditProfileForm);
 
     // Событие открытия модального окна добавления карточки
     cardAddBtn.addEventListener("click", () => {handleOpenModal(cardAddModal)})
+
+    placesList.addEventListener("click", e => {
+        // Повешал обработчик события на все кнопки лайка
+        if (e.target.classList.contains("card__like-button")) {
+            e.target.classList.toggle("card__like-button_is-active");
+        }
+
+        // Повешал обработчик события на все кнопки удаления
+        if (e.target.classList.contains("card__delete-button")) {
+            e.target.closest('.places__item').remove();
+        }
+
+        // Модалка с картинкой
+        if (e.target.classList.contains("card__image")) {
+            imgModal.querySelector('.popup__image').src = e.target.src;
+            imgModal.querySelector(".popup__caption").textContent = e.alt;
+            handleOpenModal(imgModal);
+        }
+    });
 }
 
 // Рендер карточек
 renderCards();
+addEventListeners();
 
