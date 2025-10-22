@@ -37,7 +37,7 @@ function createCard(name, link) {
         name: name,
         link: link
     });
-    renderCards(e)
+    renderCards()
 }
 
 // Функция закрытия по ESC
