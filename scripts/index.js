@@ -22,6 +22,9 @@ const editProfileModal = document.querySelector(".popup_type_edit");
 const popUpClose = document.querySelector(".popup__close");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
+const nameInput = document.querySelector(".popup__input_type_name");
+const descriptionInput = document.querySelector(".popup__input_type_description");
+const editProfileForm = document.querySelector(".popup_type_edit .popup__form");
 
 // @todo: Функция создания карточки
 // function createCard(name, link) {
@@ -40,25 +43,41 @@ function renderCards() {
 }
 
 // @todo: Открытие модального окна
-function openModal() {
+function handleOpenModal() {
     editProfileModal.classList.add("popup_is-opened");
 }
 
 // @todo: Закрытие модального окна
-function closeModal() {
+function handleCloseModal() {
     document.querySelector(".popup_is-opened").classList.remove("popup_is-opened");
 }
 
 // @todo: Обработчики события
 editProfileBtn.addEventListener("click", () => {
-    openModal();
+    nameInput.value = profileTitle.textContent;
+    descriptionInput.value = profileDescription.textContent;
+    handleOpenModal();
 })
 
 popUpClose.addEventListener("click", () => {
-    closeModal();
+    handleCloseModal();
 })
 
 renderCards();
 
+function serializeForm(formNode) {
+    const formData = new FormData(formNode);
+    const data = Object.fromEntries(formData);
+    console.log(data);
+    return data;
+}
 
+function onSubmitEditForm(e) {
+    e.preventDefault()
+    const { name, description } = serializeForm(e.target)
+    profileTitle.textContent = name;
+    profileDescription.textContent = description;
+    handleCloseModal()
+}
 
+editProfileForm.addEventListener("submit", onSubmitEditForm);
