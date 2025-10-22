@@ -47,7 +47,9 @@ function handleEsc(e) {
     }
 }
 
+// Навесил обработчик клика на оверлей и анимации на модалки
 document.querySelectorAll(".popup").forEach(popup => {
+    popup.classList.add("popup_is-animated"); // анимация
     popup.addEventListener("click", e => {
         if (e.target === popup) {
             handleCloseModal();
@@ -101,6 +103,7 @@ function onSubmitAddCardForm(e) {
     handleCloseModal()
 }
 
+// Вынес обработчики событий в отдельную функцию
 function addEvetListeners() {
     // Повешал обработчик события на все кнопки лайка
     document.querySelectorAll(".card__like-button").forEach(likeBtn => {
