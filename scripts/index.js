@@ -56,13 +56,13 @@ function handleCloseModal() {
     document.querySelectorAll(".popup_is-opened").forEach(modal => modal.classList.remove("popup_is-opened"));
 }
 
-// сериализация форм
+// Сериализация форм
 function serializeForm(formNode) {
     const formData = new FormData(formNode);
     return Object.fromEntries(formData);
 }
 
-// сабмит формы редактирования профиля
+// Сабмит формы редактирования профиля
 function onSubmitEditProfileForm(e) {
     e.preventDefault()
     const { name, description } = serializeForm(e.target)
@@ -71,7 +71,7 @@ function onSubmitEditProfileForm(e) {
     handleCloseModal()
 }
 
-// сабмит добавления карточки
+// Сабмит добавления карточки
 function onSubmitAddCardForm(e) {
     e.preventDefault()
     const formData = new FormData(e.target)
@@ -81,7 +81,7 @@ function onSubmitAddCardForm(e) {
     handleCloseModal()
 }
 
-// событие редактирования профиля
+// Событие редактирования профиля
 profileEditBtn.addEventListener("click", () => {
     nameInput.value = profileTitle.textContent;
     descriptionInput.value = profileDescription.textContent;
@@ -91,14 +91,14 @@ profileEditBtn.addEventListener("click", () => {
 // событие добавления карточки
 cardAddForm.addEventListener("submit", onSubmitAddCardForm);
 
-// повешал обработчик события на все кнопки закрытия модалки
+// Повешал обработчик события на все кнопки закрытия модалки
 modalCloseBtns.forEach(closeModal => {
     closeModal.addEventListener("click", () => {
         handleCloseModal();
     });
 });
 
-// сабмит изменения профиля
+// Сабмит изменения профиля
 profileEditForm.addEventListener("submit", onSubmitEditProfileForm);
 
 // событие открытия модального окна добавления карточки
@@ -107,10 +107,18 @@ cardAddBtn.addEventListener("click", () => {handleOpenModal(cardAddModal)})
 // Рендер карточек
 renderCards();
 
+// Повешал обработчик события на все кнопки лайка
 document.querySelectorAll(".card__like-button").forEach(likeBtn => {
     likeBtn.addEventListener("click", () => {
         likeBtn.classList.toggle("card__like-button_is-active");
         console.log(likeBtn);
+    })
+})
+
+// Повешал обработчик события на все кнопки удаления
+document.querySelectorAll(".card__delete-button").forEach(deleteBtn => {
+    deleteBtn.addEventListener("click", () => {
+        deleteBtn.closest('.places__item').style.display = "none";
     })
 })
 
