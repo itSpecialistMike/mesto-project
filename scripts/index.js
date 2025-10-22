@@ -98,7 +98,7 @@ function onSubmitAddCardForm(e) {
     const formData = new FormData(e.target)
     const { 'place-name':name, link } = serializeForm(e.target)
     createCard(name, link);
-    console.log(formData);
+    e.target.reset()
     handleCloseModal()
 }
 
@@ -128,20 +128,14 @@ function addEventListeners() {
     cardAddBtn.addEventListener("click", () => {handleOpenModal(cardAddModal)})
 
     placesList.addEventListener("click", e => {
-        // Повешал обработчик события на все кнопки лайка
+        // Повешал обработчик события на все кнопки
         if (e.target.classList.contains("card__like-button")) {
             e.target.classList.toggle("card__like-button_is-active");
-        }
-
-        // Повешал обработчик события на все кнопки удаления
-        if (e.target.classList.contains("card__delete-button")) {
-            e.target.closest('.places__item').remove();
-        }
-
-        // Модалка с картинкой
-        if (e.target.classList.contains("card__image")) {
+        } else if (e.target.classList.contains("card__delete-button")) {
+            e.target.closest('.card').remove();
+        } else if (e.target.classList.contains("card__image")) {
             imgModal.querySelector('.popup__image').src = e.target.src;
-            imgModal.querySelector(".popup__caption").textContent = e.alt;
+            imgModal.querySelector(".popup__caption").textContent = e.target.alt;
             handleOpenModal(imgModal);
         }
     });
