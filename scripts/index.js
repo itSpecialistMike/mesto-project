@@ -1,6 +1,6 @@
 import {initialCards} from './cards.js';
 
-// @todo: Темплейт карточки
+// Темплейт карточки
 function cardTemplate(link, name) {
     return `
         <li class="places__item card">
@@ -30,10 +30,9 @@ const cardAddBtn = document.querySelector(".profile__add-button");
 const cardAddModal = document.querySelector(".popup_type_new-card");
 const cardAddForm = document.querySelector(".popup_type_new-card .popup__form");
 
-// @todo: Функция создания карточки
+// Функция создания карточки
 function createCard(name, link) {
-
-    initialCards.push({
+    initialCards.unshift({
         name: name,
         link: link
     });
@@ -72,6 +71,7 @@ function onSubmitEditProfileForm(e) {
     handleCloseModal()
 }
 
+// сабмит добавления карточки
 function onSubmitAddCardForm(e) {
     e.preventDefault()
     const formData = new FormData(e.target)
@@ -81,24 +81,36 @@ function onSubmitAddCardForm(e) {
     handleCloseModal()
 }
 
-// @todo: Обработчики событий
+// событие редактирования профиля
 profileEditBtn.addEventListener("click", () => {
     nameInput.value = profileTitle.textContent;
     descriptionInput.value = profileDescription.textContent;
     handleOpenModal(profileEditModal);
 })
 
+// событие добавления карточки
 cardAddForm.addEventListener("submit", onSubmitAddCardForm);
 
+// повешал обработчик события на все кнопки закрытия модалки
 modalCloseBtns.forEach(closeModal => {
     closeModal.addEventListener("click", () => {
         handleCloseModal();
     });
 });
 
+// сабмит изменения профиля
 profileEditForm.addEventListener("submit", onSubmitEditProfileForm);
 
+// событие открытия модального окна добавления карточки
 cardAddBtn.addEventListener("click", () => {handleOpenModal(cardAddModal)})
 
 // Рендер карточек
 renderCards();
+
+document.querySelectorAll(".card__like-button").forEach(likeBtn => {
+    likeBtn.addEventListener("click", () => {
+        likeBtn.classList.toggle("card__like-button_is-active");
+        console.log(likeBtn);
+    })
+})
+
