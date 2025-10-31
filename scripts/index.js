@@ -1,4 +1,10 @@
 import {initialCards} from './cards.js';
+import '../pages/index.css';
+import logo from '../images/logo.svg';
+
+
+// Добавление лого на страницу
+document.querySelector('.header__logo').src = logo;
 
 // Темплейт карточки
 function cardTemplate(link, name) {
