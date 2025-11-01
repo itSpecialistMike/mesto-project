@@ -26,13 +26,15 @@ const profileEditModal = document.querySelector(".popup_type_edit");
 const modalCloseBtns = document.querySelectorAll(".popup__close");
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
-const nameInput = document.querySelector(".popup__input_type_name");
-const descriptionInput = document.querySelector(".popup__input_type_description");
-const profileEditForm = document.querySelector(".popup_type_edit .popup__form");
 const cardAddBtn = document.querySelector(".profile__add-button");
 const cardAddModal = document.querySelector(".popup_type_new-card");
-const cardAddForm = document.querySelector(".popup_type_new-card .popup__form");
 const imgModal = document.querySelector(".popup_type_image");
+
+// Формы и инпуты
+const profileEditForm = document.forms['edit-profile'];
+const cardAddForm = document.forms['new-place'];
+const descriptionInput = profileEditForm.description;
+const nameInput = profileEditForm.name;
 
 // Функция создания карточки
 function createCard(name, link) {
@@ -101,7 +103,6 @@ function onSubmitEditProfileForm(e) {
 // Сабмит добавления карточки
 function onSubmitAddCardForm(e) {
     e.preventDefault()
-    const formData = new FormData(e.target)
     const { 'place-name':name, link } = serializeForm(e.target)
     createCard(name, link);
     e.target.reset()
@@ -147,7 +148,47 @@ function addEventListeners() {
     });
 }
 
+function showInputError(input) {
+    input.classList.add("popup__input_type_error");
+}
+
+function removeInputError(input) {
+    input.classList.remove("popup__input_type_error");
+}
+
+function formValidate(form) {
+    const inputs = Array.from(form.querySelectorAll('.popup__input'));
+    const submitBtn = form.querySelector('.popup__button');
+    inputs.forEach(input => {
+        input.addEventListener('input', () => {
+            checkInputValidity(form, input);
+            toggleButtonState(inputs, submitBtn);
+        })
+    })
+    toggleButtonState(inputs, submitBtn);
+}
+
+function checkInputValidity(form, input) {
+    const errorElement = form.querySelector(`#${input.id}-error`);
+
+    if (!input.validity.valid) {
+        showInputError(input);
+        errorElement.textContent = input.validationMessage;
+    } else {
+        removeInputError(input);
+        errorElement.textContent = '';
+    }
+}
+
+function toggleButtonState(inputs, button) {
+    const formIsValid = inputs.every(input => input.validity.valid);
+    button.disabled = !formIsValid;
+    button.classList.toggle("popup__button_disabled", !formIsValid);
+}
 // Рендер карточек
 renderCards();
 addEventListeners();
+const forms = Array.from(document.querySelectorAll('.popup__form'));
+forms.forEach(form => formValidate(form));
+
 
