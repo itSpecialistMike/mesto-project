@@ -17,7 +17,7 @@ import {
     profileDescription,
 } from './components/forms.js';
 import {renderProfile} from "./components/profile";
-
+import {fetchUser} from "./components/fetchs";
 
 // Добавление лого на страницу
 document.querySelector('.header__logo').src = logo;
@@ -76,8 +76,18 @@ function addEventListeners() {
 
 
 // Рендер карточек
-renderCards();
-renderProfile();
+async function initApp() {
+    try {
+        const user = await fetchUser();  // ← ДОБАВЬ const
+        renderProfile();
+        renderCards(user);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+initApp();
+
 addEventListeners();
 const forms = Array.from(document.querySelectorAll('.popup__form'));
 forms.forEach(form => enableValidation(form));

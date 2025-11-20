@@ -1,3 +1,5 @@
+import {setCurrentUser} from "../state";
+
 const fetchCards = () => {
     return fetch("https://mesto.nomoreparties.co/v1/apf-cohort-202/cards", {
         headers: {
@@ -22,8 +24,14 @@ const fetchUser = () => {
         headers: {
             authorization: `18e65fe6-f22e-4549-8c48-91a029fe4686`,
         }
-    }).then(catchError)
+    })
+        .then(catchError)
+        .then(user => {
+            setCurrentUser(user)
+            return user;
+        });
 }
+
 
 const patchUser = (name, about) => {
     return fetch('https://mesto.nomoreparties.co/v1/apf-cohort-202/users/me', {
