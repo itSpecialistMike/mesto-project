@@ -1,5 +1,7 @@
 import { createCard } from './cards'
 import { handleCloseModal } from './modals'
+import {patchUser} from "./fetchs";
+import {renderProfile} from "./profile";
 
 
 const profileTitle = document.querySelector(".profile__title");
@@ -15,9 +17,9 @@ function serializeForm(formNode) {
 function onSubmitEditProfileForm(e) {
     e.preventDefault()
     const { name, description } = serializeForm(e.target)
-    profileTitle.textContent = name;
-    profileDescription.textContent = description;
-    handleCloseModal()
+    handleCloseModal();
+    patchUser(name, description)
+        .then(r => renderProfile())
 }
 
 // Сабмит добавления карточки

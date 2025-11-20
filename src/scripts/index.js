@@ -16,6 +16,7 @@ import {
     profileTitle,
     profileDescription,
 } from './components/forms.js';
+import {renderProfile} from "./components/profile";
 
 
 // Добавление лого на страницу
@@ -72,8 +73,11 @@ function addEventListeners() {
     });
 }
 
+
+
 // Рендер карточек
 renderCards();
+renderProfile();
 addEventListeners();
 const forms = Array.from(document.querySelectorAll('.popup__form'));
 forms.forEach(form => enableValidation(form));
