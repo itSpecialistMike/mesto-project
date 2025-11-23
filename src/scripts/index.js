@@ -1,4 +1,4 @@
-import { renderCards, placesList } from './components/cards.js';
+import {renderCards, placesList, likeAddUI, likeRemoveUI, checkLike} from './components/cards.js';
 import { enableValidation } from './components/validate.js';
 import '../pages/index.css';
 import logo from '../images/logo.svg';
@@ -17,7 +17,7 @@ import {
     profileDescription,
 } from './components/forms.js';
 import {renderProfile} from "./components/profile";
-import {deleteCard, fetchUser} from "./components/fetchs";
+import {deleteCard, deleteLike, fetchUser, putLike} from "./components/fetchs";
 
 // Добавление лого на страницу
 document.querySelector('.header__logo').src = logo;
@@ -61,10 +61,40 @@ function addEventListeners() {
 
     placesList.addEventListener("click", e => {
         // Повешал обработчик события на все кнопки
+        const card = e.target.closest('.card');
+
         if (e.target.classList.contains("card__like-button")) {
-            e.target.classList.toggle("card__like-button_is-active");
+            e.stopPropagation();
+            // ТОЛЬКО оптимистичное обновление UI
+            if (checkLike(card)) {
+                likeRemoveUI(card);
+            } else {
+                likeAddUI(card);
+            }
+
+            // ТОЛЬКО отправка запроса (без повторной логики)
+            const isLiked = checkLike(card); // проверяем новое состояние
+            if (isLiked) {
+                putLike(card.dataset.cardId)
+                    .catch(err => {
+                        // Откатываем если ошибка
+                        if (checkLike(card)) {
+                            likeRemoveUI(card);
+                        } else {
+                            likeAddUI(card);
+                        }
+                    });
+            } else {
+                deleteLike(card.dataset.cardId)
+                    .catch(err => {
+                        if (checkLike(card)) {
+                            likeRemoveUI(card);
+                        } else {
+                            likeAddUI(card);
+                        }
+                    });
+            }
         } else if (e.target.classList.contains("card__delete-button")) {
-            const card = e.target.closest('.card')
             deleteCard(card.dataset.cardId);
             card.remove();
         } else if (e.target.classList.contains("card__image")) {

@@ -1,15 +1,18 @@
 import {setCurrentUser} from "../state";
 
+const cohort = 'apf-cohort-202'
+const authorization = '18e65fe6-f22e-4549-8c48-91a029fe4686'
+
 const fetchCards = () => {
-    return fetch("https://mesto.nomoreparties.co/v1/apf-cohort-202/cards", {
+    return fetch(`https://mesto.nomoreparties.co/v1/${cohort}/cards`, {
         headers: {
-            authorization: `18e65fe6-f22e-4549-8c48-91a029fe4686`,
+            authorization: authorization,
         }
     }).then(catchError)
 }
 
 const postCard = (name, link) => {
-    return fetch("https://mesto.nomoreparties.co/v1/apf-cohort-202/cards", {
+    return fetch(`https://mesto.nomoreparties.co/v1/${cohort}/cards`, {
         method: "POST",
         body: JSON.stringify({name: name, link: link}),
         headers: {
@@ -20,9 +23,9 @@ const postCard = (name, link) => {
 }
 
 const fetchUser = () => {
-    return fetch("https://mesto.nomoreparties.co/v1/apf-cohort-202/users/me", {
+    return fetch(`https://mesto.nomoreparties.co/v1/${cohort}/users/me`, {
         headers: {
-            authorization: `18e65fe6-f22e-4549-8c48-91a029fe4686`,
+            authorization: authorization,
         }
     })
         .then(catchError)
@@ -33,11 +36,11 @@ const fetchUser = () => {
 }
 
 const patchUser = (name, about) => {
-    return fetch('https://mesto.nomoreparties.co/v1/apf-cohort-202/users/me', {
+    return fetch(`https://mesto.nomoreparties.co/v1/${cohort}/users/me`, {
         method: "PATCH",
         headers: {
             'Content-Type': 'application/json',
-            authorization: `18e65fe6-f22e-4549-8c48-91a029fe4686`,
+            authorization: authorization,
         },
         body: JSON.stringify({
             name: name,
@@ -47,13 +50,33 @@ const patchUser = (name, about) => {
 }
 
 const deleteCard = (cardId) => {
-    return fetch(`https://nomoreparties.co/v1/apf-cohort-202/cards/${cardId}`,
+    return fetch(`https://nomoreparties.co/v1/${cohort}/cards/${cardId}`,
         {
             method: "DELETE",
             headers: {
-                authorization: `18e65fe6-f22e-4549-8c48-91a029fe4686`,
+                authorization: authorization,
             }
         })
+}
+
+const putLike = (cardId) => {
+    return fetch(`https://nomoreparties.co/v1/${cohort}/cards/likes/${cardId}`,
+        {
+            method: "PUT",
+            headers: {
+                authorization: authorization,
+            }
+        }).then(catchError)
+}
+
+const deleteLike = (cardId) => {
+    return fetch(`https://nomoreparties.co/v1/${cohort}/cards/likes/${cardId}`,
+        {
+            method: "DELETE",
+            headers: {
+                authorization: authorization,
+            }
+        }).then(catchError)
 }
 
 function catchError(res) {
@@ -69,4 +92,6 @@ export {
     postCard,
     patchUser,
     deleteCard,
+    putLike,
+    deleteLike,
 }

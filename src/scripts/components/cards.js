@@ -7,6 +7,11 @@ function cardTemplate(link, name, likes = [], owner = null, cardId = null, curre
     const template = document.querySelector('#card-template');
     const cardElement = template.content.cloneNode(true);
 
+    const isLikedByCurrentUser = currentUser && likes.some(like => like._id === currentUser._id);
+    if (isLikedByCurrentUser) {
+        cardElement.querySelector('.card__like-button').classList.add('card__like-button_is-active');
+    }
+
     // Заполняем базовые данные
     cardElement.querySelector('.card').dataset.cardId = cardId;
     cardElement.querySelector('.card__image').src = link;
@@ -19,13 +24,11 @@ function cardTemplate(link, name, likes = [], owner = null, cardId = null, curre
 
     // Проверяем владельца карточки по ID
     if (!currentUser) {
-        console.log('currentUser не загружен, скрываем все кнопки удаления');
+        //currentUser не загружен, скрываем все кнопки удаления
         deleteBtn.style.display = 'none';
     } else if (owner && owner._id !== currentUser._id) {
-        console.log('Скрываем кнопку удаления чужая карточка');
+        // Скрываем кнопку удаления чужая карточка
         deleteBtn.style.display = 'none';
-    } else {
-        console.log('Показываем кнопку удаления наша карточка');
     }
 
     return cardElement;
@@ -35,10 +38,10 @@ function cardTemplate(link, name, likes = [], owner = null, cardId = null, curre
 
 // Функция создания карточки
 function createCard(name, link) {
-    console.log('Создание карточки:', { name, link });
+    // Создание карточки: { name, link }
     postCard(name, link)
         .then(card => {
-            console.log('Карточка создана успешно:', card);
+            // Карточка создана успешно:
             placesList.prepend(cardTemplate(
                 card.link,
                 card.name,
@@ -55,11 +58,9 @@ function createCard(name, link) {
 // Вывести карточки на страницу
 function renderCards(currentUser) {
     placesList.innerHTML = '';
-    console.log('Начало загрузки карточек...');
 
     fetchCards()
         .then(cards => {
-            console.log(cards);
             cards.forEach(card => {
                 placesList.append(cardTemplate(
                     card.link,
@@ -76,9 +77,37 @@ function renderCards(currentUser) {
         });
 }
 
+// Проверяет, лайкнул ли текущий пользователь карточку
+function checkLike(cardElement) {
+    const likeButton = cardElement.querySelector('.card__like-button');
+    return likeButton.classList.contains("card__like-button_is-active");
+}
+
+// Добавляет лайк в UI (оптимистичное обновление)
+function likeAddUI(cardElement) {
+    const likeButton = cardElement.querySelector('.card__like-button');
+    const likesCounter = cardElement.querySelector('.card__likes');
+
+    likeButton.classList.add("card__like-button_is-active");
+    likesCounter.textContent = parseInt(likesCounter.textContent) + 1;
+}
+
+// Убирает лайк из UI (оптимистичное обновление)
+function likeRemoveUI(cardElement) {
+    const likeButton = cardElement.querySelector('.card__like-button');
+    const likesCounter = cardElement.querySelector('.card__likes');
+
+    likeButton.classList.remove("card__like-button_is-active");
+    likesCounter.textContent = parseInt(likesCounter.textContent) - 1;
+}
+
+
 export {
     cardTemplate,
     createCard,
     renderCards,
-    placesList
+    placesList,
+    likeAddUI,
+    likeRemoveUI,
+    checkLike
 };
