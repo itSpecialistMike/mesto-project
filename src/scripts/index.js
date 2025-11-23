@@ -16,7 +16,8 @@ import {
     profileTitle,
     profileDescription,
 } from './components/forms.js';
-
+import {renderProfile} from "./components/profile";
+import {deleteCard, fetchUser} from "./components/fetchs";
 
 // Добавление лого на страницу
 document.querySelector('.header__logo').src = logo;
@@ -63,7 +64,9 @@ function addEventListeners() {
         if (e.target.classList.contains("card__like-button")) {
             e.target.classList.toggle("card__like-button_is-active");
         } else if (e.target.classList.contains("card__delete-button")) {
-            e.target.closest('.card').remove();
+            const card = e.target.closest('.card')
+            deleteCard(card.dataset.cardId);
+            card.remove();
         } else if (e.target.classList.contains("card__image")) {
             imgModal.querySelector('.popup__image').src = e.target.src;
             imgModal.querySelector(".popup__caption").textContent = e.target.alt;
@@ -72,8 +75,21 @@ function addEventListeners() {
     });
 }
 
+
+
 // Рендер карточек
-renderCards();
+async function initApp() {
+    try {
+        const user = await fetchUser();  // ← ДОБАВЬ const
+        renderProfile();
+        renderCards(user);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+initApp();
+
 addEventListeners();
 const forms = Array.from(document.querySelectorAll('.popup__form'));
 forms.forEach(form => enableValidation(form));
