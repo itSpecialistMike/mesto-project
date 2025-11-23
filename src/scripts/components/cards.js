@@ -8,14 +8,16 @@ function cardTemplate(link, name, likes = [], owner = null, cardId = null, curre
     const cardElement = template.content.cloneNode(true);
 
     // Заполняем базовые данные
+    cardElement.querySelector('.card').dataset.cardId = cardId;
     cardElement.querySelector('.card__image').src = link;
     cardElement.querySelector('.card__image').alt = name;
     cardElement.querySelector('.card__title').textContent = name;
     cardElement.querySelector('.card__likes').textContent = likes.length;
 
-    // Проверяем владельца карточки по ID
+
     const deleteBtn = cardElement.querySelector('.card__delete-button');
 
+    // Проверяем владельца карточки по ID
     if (!currentUser) {
         console.log('currentUser не загружен, скрываем все кнопки удаления');
         deleteBtn.style.display = 'none';

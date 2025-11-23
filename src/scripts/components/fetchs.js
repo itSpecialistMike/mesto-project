@@ -32,7 +32,6 @@ const fetchUser = () => {
         });
 }
 
-
 const patchUser = (name, about) => {
     return fetch('https://mesto.nomoreparties.co/v1/apf-cohort-202/users/me', {
         method: "PATCH",
@@ -47,6 +46,16 @@ const patchUser = (name, about) => {
     }).then(catchError)
 }
 
+const deleteCard = (cardId) => {
+    return fetch(`https://nomoreparties.co/v1/apf-cohort-202/cards/${cardId}`,
+        {
+            method: "DELETE",
+            headers: {
+                authorization: `18e65fe6-f22e-4549-8c48-91a029fe4686`,
+            }
+        })
+}
+
 function catchError(res) {
     if (res.ok) {
         return res.json();
@@ -59,4 +68,5 @@ export {
     fetchUser,
     postCard,
     patchUser,
+    deleteCard,
 }
