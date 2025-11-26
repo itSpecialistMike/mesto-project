@@ -1,6 +1,6 @@
 import { createCard } from './cards'
 import { handleCloseModal } from './modals'
-import {patchAvatar, patchUser} from "./fetchs";
+import {patchAvatar, patchUser} from "./api";
 import {renderProfile} from "./profile";
 
 

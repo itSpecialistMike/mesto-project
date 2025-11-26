@@ -1,4 +1,4 @@
-import {fetchCards, postCard} from "./fetchs";
+import {getInitialCards, postCard} from "./api";
 
 const placesList = document.querySelector(".places__list");
 
@@ -59,7 +59,7 @@ function createCard(name, link) {
 function renderCards(currentUser) {
     placesList.innerHTML = '';
 
-    fetchCards()
+    getInitialCards()
         .then(cards => {
             cards.forEach(card => {
                 placesList.append(cardTemplate(

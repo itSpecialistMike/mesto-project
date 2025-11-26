@@ -1,12 +1,12 @@
-import {fetchUser} from "./fetchs";
-import {getCurrentUser, setCurrentUser} from "../state";
+import {getUser} from "./api";
+import {setCurrentUser} from "../state";
 
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const profileAvatar = document.querySelector(".profile__image");
 
 export const renderProfile = () => {
-    fetchUser()
+    getUser()
         .then(data => {
             profileTitle.textContent = data.name;
             profileDescription.textContent = data.about;
