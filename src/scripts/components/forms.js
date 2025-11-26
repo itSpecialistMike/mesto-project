@@ -25,9 +25,9 @@ function onSubmitEditProfileForm(e) {
     patchUser(name, description)
         .then(() => {
             renderProfile()
+            handleCloseModal()
         })
         .finally(() => {
-            handleCloseModal()
             btn.textContent = origText
         })
 }
@@ -57,10 +57,9 @@ function onSubmitUpdAvatarForm(e) {
         .then(() => {
             e.target.reset()
             renderProfile()
-
+            handleCloseModal()
         })
         .finally(() => {
-            handleCloseModal()
             btn.textContent = origText
         })
 }
