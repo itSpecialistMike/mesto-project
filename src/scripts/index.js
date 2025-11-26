@@ -19,7 +19,7 @@ import {
     onSubmitUpdAvatarForm,
 } from './components/forms.js';
 import {renderProfile} from "./components/profile";
-import {deleteCard, deleteLike, fetchUser, putLike} from "./components/fetchs";
+import {deleteCard, deleteLike, getUser, putLike} from "./components/api";
 
 // Добавление лого на страницу
 document.querySelector('.header__logo').src = logo;
@@ -46,7 +46,7 @@ function addEventListeners() {
         });
     });
 
-    updAvatarBtn.addEventListener('click', (e) => {
+    updAvatarBtn.addEventListener('click', () => {
         handleOpenModal(updAvatarModal)
     })
 
@@ -85,7 +85,7 @@ function addEventListeners() {
             const isLiked = checkLike(card); // проверяем новое состояние
             if (isLiked) {
                 putLike(card.dataset.cardId)
-                    .catch(err => {
+                    .catch(() => {
                         // Откатываем если ошибка
                         if (checkLike(card)) {
                             likeRemoveUI(card);
@@ -95,7 +95,7 @@ function addEventListeners() {
                     });
             } else {
                 deleteLike(card.dataset.cardId)
-                    .catch(err => {
+                    .catch(() => {
                         if (checkLike(card)) {
                             likeRemoveUI(card);
                         } else {
@@ -119,7 +119,7 @@ function addEventListeners() {
 // Рендер карточек
 async function initApp() {
     try {
-        const user = await fetchUser();  // ← ДОБАВЬ const
+        const user = await getUser();  // ← ДОБАВЬ const
         renderProfile();
         renderCards(user);
     } catch (error) {
