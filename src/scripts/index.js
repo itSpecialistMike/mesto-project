@@ -1,4 +1,4 @@
-import { renderCards, placesList } from './components/cards.js';
+import {renderCards, placesList, likeAddUI, likeRemoveUI, checkLike} from './components/cards.js';
 import { enableValidation } from './components/validate.js';
 import '../pages/index.css';
 import logo from '../images/logo.svg';
@@ -9,15 +9,17 @@ import {
     imgModal,
     profileEditModal,
     modalCloseBtns,
+    updAvatarModal,
 } from './components/modals.js';
 import {
     onSubmitEditProfileForm,
     onSubmitAddCardForm,
     profileTitle,
     profileDescription,
+    onSubmitUpdAvatarForm,
 } from './components/forms.js';
 import {renderProfile} from "./components/profile";
-import {deleteCard, fetchUser} from "./components/fetchs";
+import {deleteCard, deleteLike, getUser, putLike} from "./components/api";
 
 // Добавление лого на страницу
 document.querySelector('.header__logo').src = logo;
@@ -27,11 +29,12 @@ const profileEditForm = document.forms['edit-profile'];
 const cardAddForm = document.forms['new-place'];
 const descriptionInput = profileEditForm.description;
 const nameInput = profileEditForm.name;
+const updAvatarForm = document.forms['upd-avatar'];
 
 // DOM узлы
 const cardAddBtn = document.querySelector(".profile__add-button");
-
 const profileEditBtn = document.querySelector(".profile__edit-button");
+const updAvatarBtn = document.querySelector('.profile__image');
 
 
 // Вынес обработчики событий в отдельную функцию
@@ -42,6 +45,12 @@ function addEventListeners() {
             handleCloseModal();
         });
     });
+
+    updAvatarBtn.addEventListener('click', () => {
+        handleOpenModal(updAvatarModal)
+    })
+
+    updAvatarForm.addEventListener('submit', (e) => {onSubmitUpdAvatarForm(e)})
 
     // Событие редактирования профиля
     profileEditBtn.addEventListener("click", () => {
@@ -61,10 +70,40 @@ function addEventListeners() {
 
     placesList.addEventListener("click", e => {
         // Повешал обработчик события на все кнопки
+        const card = e.target.closest('.card');
+
         if (e.target.classList.contains("card__like-button")) {
-            e.target.classList.toggle("card__like-button_is-active");
+            e.stopPropagation();
+            // ТОЛЬКО оптимистичное обновление UI
+            if (checkLike(card)) {
+                likeRemoveUI(card);
+            } else {
+                likeAddUI(card);
+            }
+
+            // ТОЛЬКО отправка запроса (без повторной логики)
+            const isLiked = checkLike(card); // проверяем новое состояние
+            if (isLiked) {
+                putLike(card.dataset.cardId)
+                    .catch(() => {
+                        // Откатываем если ошибка
+                        if (checkLike(card)) {
+                            likeRemoveUI(card);
+                        } else {
+                            likeAddUI(card);
+                        }
+                    });
+            } else {
+                deleteLike(card.dataset.cardId)
+                    .catch(() => {
+                        if (checkLike(card)) {
+                            likeRemoveUI(card);
+                        } else {
+                            likeAddUI(card);
+                        }
+                    });
+            }
         } else if (e.target.classList.contains("card__delete-button")) {
-            const card = e.target.closest('.card')
             deleteCard(card.dataset.cardId);
             card.remove();
         } else if (e.target.classList.contains("card__image")) {
@@ -80,7 +119,7 @@ function addEventListeners() {
 // Рендер карточек
 async function initApp() {
     try {
-        const user = await fetchUser();  // ← ДОБАВЬ const
+        const user = await getUser();  // ← ДОБАВЬ const
         renderProfile();
         renderCards(user);
     } catch (error) {
@@ -88,10 +127,14 @@ async function initApp() {
     }
 }
 
-initApp();
+initApp().then(() => {
+    addEventListeners();
+    const forms = Array.from(document.querySelectorAll('.popup__form'));
+    forms.forEach(form => enableValidation(form));
+})
 
-addEventListeners();
-const forms = Array.from(document.querySelectorAll('.popup__form'));
-forms.forEach(form => enableValidation(form));
+
+
+
 
 

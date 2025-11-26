@@ -8,6 +8,45 @@
   background-position: center;
   margin: 0 29px 0 0;
   background-image: url('../../../images/avatar.jpg');
+  position: relative;
+  cursor: pointer;
+}
+
+.profile__image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6); /* затемнение поверх аватарки */
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profile__image::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  background-image: url('../../../images/edit-icon.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.profile__image:hover::before {
+  opacity: 1; /* показываем затемнение */
+}
+
+.profile__image:hover::after {
+  opacity: 1; /* иконка остается непрозрачной */
 }
 
 @media screen and (max-width: 740px) {

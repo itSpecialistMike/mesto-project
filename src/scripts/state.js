@@ -8,5 +8,4 @@ export const getCurrentUserName = () => currentUser?.name || '';
 
 export const setCurrentUser = (user) => {
     currentUser = user;
-    console.log('Текущий пользователь:', user);
 };

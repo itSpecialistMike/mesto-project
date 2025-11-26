@@ -1,6 +1,6 @@
 import { createCard } from './cards'
 import { handleCloseModal } from './modals'
-import {patchUser} from "./fetchs";
+import {patchAvatar, patchUser} from "./api";
 import {renderProfile} from "./profile";
 
 
@@ -15,26 +15,61 @@ function serializeForm(formNode) {
 
 // Сабмит формы редактирования профиля
 function onSubmitEditProfileForm(e) {
+    const btn = e.target.querySelector('.popup__button')
+    const origText = btn.textContent
+    btn.textContent = 'Сохранение...';
+
     e.preventDefault()
     const { name, description } = serializeForm(e.target)
     handleCloseModal();
     patchUser(name, description)
-        .then(r => renderProfile())
+        .then(() => {
+            renderProfile()
+        })
+        .finally(() => {
+            handleCloseModal()
+            btn.textContent = origText
+        })
 }
 
 // Сабмит добавления карточки
 function onSubmitAddCardForm(e) {
+    const btn = e.target.querySelector('.popup__button')
+    const origText = btn.textContent
+    btn.textContent = 'Сохранение...';
+
     e.preventDefault()
     const { 'place-name':name, link } = serializeForm(e.target)
     createCard(name, link);
     e.target.reset()
     handleCloseModal()
+    btn.textContent = origText
+}
+
+function onSubmitUpdAvatarForm(e) {
+    const btn = e.target.querySelector('.popup__button')
+    const origText = btn.textContent
+    btn.textContent = 'Сохранение...';
+
+    e.preventDefault()
+    const {'avatar-url': avatar} = serializeForm(e.target)
+    patchAvatar(avatar)
+        .then(() => {
+            e.target.reset()
+            renderProfile()
+
+        })
+        .finally(() => {
+            handleCloseModal()
+            btn.textContent = origText
+        })
 }
 
 export {
     serializeForm,
     onSubmitEditProfileForm,
     onSubmitAddCardForm,
+    onSubmitUpdAvatarForm,
     profileTitle,
     profileDescription,
 }
