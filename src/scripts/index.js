@@ -9,12 +9,14 @@ import {
     imgModal,
     profileEditModal,
     modalCloseBtns,
+    updAvatarModal,
 } from './components/modals.js';
 import {
     onSubmitEditProfileForm,
     onSubmitAddCardForm,
     profileTitle,
     profileDescription,
+    onSubmitUpdAvatarForm,
 } from './components/forms.js';
 import {renderProfile} from "./components/profile";
 import {deleteCard, deleteLike, fetchUser, putLike} from "./components/fetchs";
@@ -27,11 +29,12 @@ const profileEditForm = document.forms['edit-profile'];
 const cardAddForm = document.forms['new-place'];
 const descriptionInput = profileEditForm.description;
 const nameInput = profileEditForm.name;
+const updAvatarForm = document.forms['upd-avatar'];
 
 // DOM узлы
 const cardAddBtn = document.querySelector(".profile__add-button");
-
 const profileEditBtn = document.querySelector(".profile__edit-button");
+const updAvatarBtn = document.querySelector('.profile__image');
 
 
 // Вынес обработчики событий в отдельную функцию
@@ -42,6 +45,12 @@ function addEventListeners() {
             handleCloseModal();
         });
     });
+
+    updAvatarBtn.addEventListener('click', (e) => {
+        handleOpenModal(updAvatarModal)
+    })
+
+    updAvatarForm.addEventListener('submit', (e) => {onSubmitUpdAvatarForm(e)})
 
     // Событие редактирования профиля
     profileEditBtn.addEventListener("click", () => {
@@ -118,10 +127,14 @@ async function initApp() {
     }
 }
 
-initApp();
+initApp().then(() => {
+    addEventListeners();
+    const forms = Array.from(document.querySelectorAll('.popup__form'));
+    forms.forEach(form => enableValidation(form));
+})
 
-addEventListeners();
-const forms = Array.from(document.querySelectorAll('.popup__form'));
-forms.forEach(form => enableValidation(form));
+
+
+
 
 

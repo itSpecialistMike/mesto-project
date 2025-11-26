@@ -1,6 +1,7 @@
 const cardAddModal = document.querySelector(".popup_type_new-card");
 const imgModal = document.querySelector(".popup_type_image");
 const profileEditModal = document.querySelector(".popup_type_edit");
+const updAvatarModal = document.querySelector(".popup_type_updAvatar");
 const modalCloseBtns = document.querySelectorAll(".popup__close");
 
 // Функция закрытия по ESC
@@ -42,5 +43,6 @@ export {
     cardAddModal,
     imgModal,
     profileEditModal,
+    updAvatarModal,
     modalCloseBtns,
 }
