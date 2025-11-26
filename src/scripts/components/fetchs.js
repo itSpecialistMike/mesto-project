@@ -79,6 +79,20 @@ const deleteLike = (cardId) => {
         }).then(catchError)
 }
 
+const patchAvatar = (avatar) => {
+    return fetch(`https://nomoreparties.co/v1/${cohort}/users/me/avatar`,
+        {
+            method: "PATCH",
+            headers: {
+                'Content-Type': 'application/json',
+                authorization: authorization,
+            },
+            body: JSON.stringify({
+                avatar: avatar
+            })
+        }).then(catchError)
+}
+
 function catchError(res) {
     if (res.ok) {
         return res.json();
@@ -94,4 +108,5 @@ export {
     deleteCard,
     putLike,
     deleteLike,
+    patchAvatar,
 }

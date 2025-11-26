@@ -1,6 +1,6 @@
 import { createCard } from './cards'
 import { handleCloseModal } from './modals'
-import {patchUser} from "./fetchs";
+import {patchAvatar, patchUser} from "./fetchs";
 import {renderProfile} from "./profile";
 
 
@@ -31,10 +31,21 @@ function onSubmitAddCardForm(e) {
     handleCloseModal()
 }
 
+function onSubmitUpdAvatarForm(e) {
+    e.preventDefault()
+    const {'avatar-url': avatar} = serializeForm(e.target)
+    patchAvatar(avatar).then(() => {
+        e.target.reset()
+        handleCloseModal()
+        renderProfile()
+    })
+}
+
 export {
     serializeForm,
     onSubmitEditProfileForm,
     onSubmitAddCardForm,
+    onSubmitUpdAvatarForm,
     profileTitle,
     profileDescription,
 }
